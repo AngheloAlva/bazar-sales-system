@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  monitos-de-la-nona:
+    image: postgres:15.3
+    container_name: monitos-de-la-nona
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./postgres:/var/lib/postgresql/data

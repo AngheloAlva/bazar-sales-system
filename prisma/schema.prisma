@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ROL {
+  ADMIN
+  SELLER
+  SALES_MANAGER
+}
+
+enum PAY_METHOD {
+  CASH
+  CARD
+}
+
+enum DOCUMENT_TYPE {
+  INVOICE // BOLETA
+  RECEIPT // FACTURA
+}
+
+model User {
+  id            String    @id @default(uuid())
+  name          String
+  email         String    @unique
+  phone         String?
+  address       String?
+  rut           String    @unique
+  bornDate      DateTime?
+  emailVerified DateTime?
+  password      String
+  role          ROL
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sales         Sale[]
+}
+
+model Sale {
+  id            String        @id @default(uuid())
+  documentType  DOCUMENT_TYPE
+  total         Float
+  subtotal      Float
+  iva           Float
+  payMethod     PAY_METHOD
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  saleDetails   SaleDetail[]
+  clientId      String
+  client        Client        @relation(fields: [clientId], references: [id])
+  daySaleId     String
+  daySale       DaySales      @relation(fields: [daySaleId], references: [id])
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+}
+
+model SaleDetail {
+  id        String  @id @default(uuid())
+  quantity  Int
+  unitPrice Float
+  total     Float
+
+  saleId    String
+  sale      Sale    @relation(fields: [saleId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Product {
+  id              String    @id @default(uuid())
+  name            String
+  description     String
+  SKU             String
+  stock           Int
+  price           Float
+  image           String?
+  expirationDate  DateTime
+  status          Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  saleDetails     SaleDetail[]
+}
+
+model Client {
+  id            String   @id @default(uuid())
+  name          String
+  rut           String   @unique
+  address       String?
+  phone         String?
+  email         String?
+  socialReason  String?
+  bornDate      DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  sales         Sale[]
+}
+
+model DaySales {
+  id    String   @id @default(uuid())
+  date  DateTime
+  open  Boolean  @default(false)
+  sales Sale[]
+}
