@@ -2,20 +2,16 @@
 
 import { signIn } from "@/auth"
 
-export const authenticate = async (prevState: string | undefined, formData: FormData) => {
+export const authenticate = async (email: string, password: string) => {
 	try {
 		await signIn("credentials", {
-			...Object.fromEntries(formData),
-			redirect: false,
+			email,
+			password,
 		})
 
 		return "Success"
 	} catch (error) {
-		if ((error as Error).message.includes("CredentialsSignin")) {
-			return "CredentialsSignin"
-		}
-
-		return "UnknownError"
+		return "Error"
 	}
 }
 

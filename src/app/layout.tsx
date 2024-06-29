@@ -1,4 +1,5 @@
-import { inter } from "@/config/fonts"
+import ToasterProvider from "@/components/providers/Toaster"
+import { mulish } from "@/config/fonts"
 
 import type { Metadata } from "next"
 import "./globals.css"
@@ -15,7 +16,9 @@ export default function RootLayout({
 }>): React.ReactElement {
 	return (
 		<html lang="es">
-			<body className={inter.className}>{children}</body>
+			<body className={mulish.className}>
+				<ToasterProvider>{children}</ToasterProvider>
+			</body>
 		</html>
 	)
 }

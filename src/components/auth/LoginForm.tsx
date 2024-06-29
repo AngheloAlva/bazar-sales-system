@@ -1,72 +1,83 @@
 "use client"
 
-import { useFormState, useFormStatus } from "react-dom"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { loginSchema } from "@/lib/schemas"
+import { useForm } from "react-hook-form"
 import { authenticate } from "@/actions"
-import { useEffect } from "react"
 import Link from "next/link"
-import clsx from "clsx"
+import { z } from "zod"
 
-import { Button, Input, Label } from "../ui"
-import { OctagonAlert } from "lucide-react"
+import {
+	Form,
+	Input,
+	Button,
+	useToast,
+	FormItem,
+	FormField,
+	FormLabel,
+	FormControl,
+	FormMessage,
+} from "../ui"
 
 export default function LoginForm(): React.ReactElement {
-	const [state, dispatch] = useFormState(authenticate, undefined)
+	const { toast } = useToast()
 
-	useEffect(() => {
-		if (state === "Success") {
+	const form = useForm<z.infer<typeof loginSchema>>({
+		resolver: zodResolver(loginSchema),
+		defaultValues: {
+			email: "",
+			password: "",
+		},
+	})
+
+	const onSubmit = async (values: z.infer<typeof loginSchema>) => {
+		const success = await authenticate(values.email, values.password)
+
+		if (success === "Success") {
 			window.location.replace("/")
+		} else {
+			toast({
+				title: "Error al iniciar sesión",
+				description: "Verifica tus credenciales",
+				variant: "destructive",
+			})
 		}
-	}, [state])
+	}
 
 	return (
-		<form action={dispatch} className="flex flex-col">
-			<Label htmlFor="email">Email</Label>
-			<Input name="email" className="mb-5 rounded border bg-gray-200 px-5 py-2" type="email" />
+		<Form {...form}>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
+				<FormField
+					control={form.control}
+					name="email"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Email</FormLabel>
+							<FormControl>
+								<Input placeholder="Email" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+				<FormField
+					control={form.control}
+					name="password"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Password</FormLabel>
+							<FormControl>
+								<Input type="password" placeholder="Password" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
 
-			<Label htmlFor="password">Password</Label>
-			<Input
-				name="password"
-				className="mb-5 rounded border bg-gray-200 px-5 py-2"
-				type="password"
-			/>
+				<Button type="submit">Iniciar sesión</Button>
 
-			<div className="mb-2 flex h-8 items-end space-x-1" aria-live="polite" aria-atomic="true">
-				{state === "CredentialsSignin" && (
-					<>
-						<OctagonAlert className="h-5 w-5 text-red-500" />
-						<p className="text-sm text-red-500">Invalid credentials</p>
-					</>
-				)}
-			</div>
-
-			<LoginButton />
-
-			{/* divisor l ine */}
-			<div className="my-5 flex items-center">
-				<div className="flex-1 border-t border-gray-500"></div>
-				<div className="px-2 text-gray-800">O</div>
-				<div className="flex-1 border-t border-gray-500"></div>
-			</div>
-
-			<Link href="/auth/new-account" className="text-center text-blue-600">
-				Create new account
-			</Link>
-		</form>
-	)
-}
-
-function LoginButton() {
-	const { pending } = useFormStatus()
-
-	return (
-		<Button
-			type="submit"
-			className={clsx("btn-primary", {
-				"opacity-50": pending,
-			})}
-			disabled={pending}
-		>
-			Login
-		</Button>
+				{/* // TODO: Add "Forgot your passsword?" */}
+			</form>
+		</Form>
 	)
 }
