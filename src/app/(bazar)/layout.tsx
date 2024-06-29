@@ -4,6 +4,8 @@ import { auth } from "@/auth"
 import { Aside, SideMenu } from "@/components/dashboard"
 import { TooltipProvider } from "@/components/ui"
 
+import type { User } from "@prisma/client"
+
 export default async function BazarLayout({
 	children,
 }: {
@@ -16,7 +18,7 @@ export default async function BazarLayout({
 	return (
 		<div className="flex min-h-screen w-full flex-col bg-muted/40">
 			<TooltipProvider>
-				<Aside />
+				<Aside user={session.user as User} />
 				<div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
 					<SideMenu />
 					{children}
