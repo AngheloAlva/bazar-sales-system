@@ -7,6 +7,7 @@ export const authenticate = async (email: string, password: string) => {
 		await signIn("credentials", {
 			email,
 			password,
+			redirect: false,
 		})
 
 		return "Success"
