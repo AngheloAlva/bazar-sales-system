@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { loginSchema } from "@/lib/schemas"
 import { useForm } from "react-hook-form"
 import { authenticate } from "@/actions"
-import Link from "next/link"
 import { z } from "zod"
 
 import {
