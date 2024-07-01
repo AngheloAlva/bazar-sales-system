@@ -29,7 +29,17 @@ export const getProducts = async (status?: boolean) => {
 	}
 }
 
-export const createNewProduct = async (data: z.infer<typeof createProduct>) => {
+interface CreateProductData {
+	name: string
+	description: string
+	SKU: string
+	stock: number
+	price: number
+	expirationDate: Date
+	image?: string
+}
+
+export const createNewProduct = async (data: CreateProductData) => {
 	try {
 		const product = await prisma.product.create({
 			data,

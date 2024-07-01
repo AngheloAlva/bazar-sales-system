@@ -1,48 +1,66 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { createNewProduct } from "@/actions/bazar/products"
+import { UploadButton } from "@/utils/uploadthing"
 import { createProduct } from "@/lib/schemas/"
-import {
-	Button,
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	Input,
-	useToast,
-} from "@/components/ui"
+import { redirect } from "next/navigation"
 import { useForm } from "react-hook-form"
+import { format } from "date-fns"
+import { useState } from "react"
+import { cn } from "@/lib/utils"
+
+import { CalendarIcon } from "lucide-react"
+import {
+	Form,
+	Input,
+	Button,
+	Popover,
+	useToast,
+	Calendar,
+	FormItem,
+	FormField,
+	FormLabel,
+	FormControl,
+	FormMessage,
+	PopoverContent,
+	PopoverTrigger,
+	FormDescription,
+} from "@/components/ui"
 
 import type { z } from "zod"
-import { createNewProduct } from "@/actions/bazar/products"
-import { redirect } from "next/navigation"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
-import { Calendar } from "@/components/ui/calendar"
 
 export default function AddProductForm(): React.ReactElement {
+	const [image, setImage] = useState<string | undefined>(undefined)
+	const [loading, setLoading] = useState<boolean>(false)
 	const { toast } = useToast()
 
 	const form = useForm<z.infer<typeof createProduct>>({
 		resolver: zodResolver(createProduct),
 		defaultValues: {
-			SKU: "",
 			name: "",
-			price: 0,
-			stock: 0,
-			image: "",
 			description: "",
-			expirationDate: new Date(),
+			SKU: "",
+			price: "",
+			stock: "",
+			// expirationDate: new Date(),
 		},
 	})
 
 	const onSubmit = async (values: z.infer<typeof createProduct>) => {
+		// setLoading(true)
+
 		console.log(values)
 
-		// const { ok } = await createNewProduct(values)
+		// const { ok } = await createNewProduct({
+		// 	...values,
+		// 	price: Number(values.price),
+		// 	stock: Number(values.stock),
+		// 	expirationDate: new Date(values.expirationDate),
+		// 	image,
+		// })
+
+		// setLoading(false)
 
 		// if (!ok) {
 		// 	toast({
@@ -50,6 +68,8 @@ export default function AddProductForm(): React.ReactElement {
 		// 		description: "Ocurrió un error al crear el producto",
 		// 		variant: "destructive",
 		// 	})
+
+		// 	return
 		// }
 
 		// toast({
@@ -58,7 +78,7 @@ export default function AddProductForm(): React.ReactElement {
 		// })
 
 		// setTimeout(() => {
-		//   redirect("/productos")
+		// 	redirect("/productos")
 		// }, 2000)
 	}
 
@@ -74,45 +94,7 @@ export default function AddProductForm(): React.ReactElement {
 							<FormControl>
 								<Input placeholder="Nombre" {...field} />
 							</FormControl>
-						</FormItem>
-					)}
-				/>
-
-				<FormField
-					control={form.control}
-					name="price"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Precio</FormLabel>
-							<FormControl>
-								<Input placeholder="Precio" {...field} />
-							</FormControl>
-						</FormItem>
-					)}
-				/>
-
-				<FormField
-					control={form.control}
-					name="stock"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Stock</FormLabel>
-							<FormControl>
-								<Input placeholder="Stock" {...field} />
-							</FormControl>
-						</FormItem>
-					)}
-				/>
-
-				<FormField
-					control={form.control}
-					name="image"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Imagen</FormLabel>
-							<FormControl>
-								<Input placeholder="Imagen" {...field} />
-							</FormControl>
+							<FormMessage />
 						</FormItem>
 					)}
 				/>
@@ -126,11 +108,87 @@ export default function AddProductForm(): React.ReactElement {
 							<FormControl>
 								<Input placeholder="Descripción" {...field} />
 							</FormControl>
+							<FormMessage />
 						</FormItem>
 					)}
 				/>
 
 				<FormField
+					control={form.control}
+					name="SKU"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>SKU</FormLabel>
+							<FormControl>
+								<Input placeholder="SKU" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="price"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Precio</FormLabel>
+							<FormControl>
+								<Input placeholder="Precio" {...field} />
+							</FormControl>
+							<FormDescription>
+								El precio del producto debe ser ingresado sin puntos ni comas. Ejemplo: 1990
+							</FormDescription>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				<FormField
+					control={form.control}
+					name="stock"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Stock</FormLabel>
+							<FormControl>
+								<Input placeholder="Stock" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/>
+
+				{/* <UploadButton
+					endpoint="imageUploader"
+					onClientUploadComplete={(res) => {
+						setLoading(true)
+						setImage(res[0].url)
+						setLoading(false)
+					}}
+					onUploadError={(error: Error) => {
+						toast({
+							title: "Error al subir la imagen",
+							description: error.message,
+							variant: "destructive",
+						})
+					}}
+				/> */}
+
+				{/* <FormField
+					control={form.control}
+					name="expirationDate"
+					render={({ field }) => (
+						<FormItem>
+							<FormLabel>Fecha de Expiracion</FormLabel>
+							<FormControl>
+								<Input placeholder="01-06-2025" {...field} />
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					)}
+				/> */}
+
+				{/* <FormField
 					control={form.control}
 					name="expirationDate"
 					render={({ field }) => (
@@ -161,9 +219,10 @@ export default function AddProductForm(): React.ReactElement {
 									/>
 								</PopoverContent>
 							</Popover>
+							<FormMessage />
 						</FormItem>
 					)}
-				/>
+				/> */}
 
 				<Button type="submit">Crear producto</Button>
 			</form>
