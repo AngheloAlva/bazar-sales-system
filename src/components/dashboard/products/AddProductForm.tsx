@@ -73,8 +73,8 @@ export default function AddProductForm(): React.ReactElement {
 		}
 
 		toast({
-			title: "Producto creado exitosamente",
-			description: "Sera redirigido a la lista de productos en un instante",
+			title: "Producto creado",
+			description: "El producto ha sido creado exitosamente",
 		})
 
 		form.reset()

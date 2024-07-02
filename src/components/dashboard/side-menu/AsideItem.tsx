@@ -16,7 +16,7 @@ export default function SideMenuTooltip({
 			<TooltipTrigger asChild>
 				<Link
 					href={href}
-					className={`flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8 ${pathName === href ? "bg-black text-white" : ""}`}
+					className={`flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors md:h-8 md:w-8 ${pathName === href ? "bg-black text-white" : "hover:text-foreground"}`}
 				>
 					{icon}
 				</Link>
