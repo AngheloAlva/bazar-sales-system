@@ -1,3 +1,5 @@
+"use client"
+
 import { es } from "date-fns/locale"
 import { format } from "date-fns"
 import Image from "next/image"
@@ -13,7 +15,10 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuContent,
 	DropdownMenuTrigger,
+	useToast,
 } from "@/components/ui"
+import { handleProductStatus } from "@/actions/bazar/products"
+import { useState } from "react"
 
 export default function ProductItem({
 	id,
@@ -22,13 +27,38 @@ export default function ProductItem({
 	price,
 	stock,
 	image,
-	status,
 	isSeller,
 	updatedAt,
 	createdAt,
 	description,
 	expirationDate,
+	status: statusDb,
 }: ProductItemProps): React.ReactElement {
+	const [status, setStatus] = useState<boolean>(statusDb)
+	const { toast } = useToast()
+
+	const handleStatus = async () => {
+		setStatus(!status)
+		const { ok, error } = await handleProductStatus(id, !status)
+
+		if (!ok) {
+			toast({
+				title: "Error",
+				description:
+					"No se pudo cambiar el estado del producto. Inténtalo de nuevo más tarde." + error,
+				variant: "destructive",
+			})
+			setStatus(status)
+
+			return
+		}
+
+		toast({
+			title: "Éxito",
+			description: `El producto ${name} ha sido ${status ? "desactivado" : "activado"}`,
+		})
+	}
+
 	return (
 		<TableRow>
 			<TableCell className="hidden sm:table-cell">
@@ -66,11 +96,9 @@ export default function ProductItem({
 							<DropdownMenuLabel>Acciones</DropdownMenuLabel>
 							<DropdownMenuItem>Editar</DropdownMenuItem>
 							<DropdownMenuItem>Eliminar</DropdownMenuItem>
-							{status ? (
-								<DropdownMenuItem>Desactivar</DropdownMenuItem>
-							) : (
-								<DropdownMenuItem>Activar</DropdownMenuItem>
-							)}
+							<DropdownMenuItem onClick={handleStatus}>
+								{status ? "Desactivar" : "Activar"}
+							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</TableCell>

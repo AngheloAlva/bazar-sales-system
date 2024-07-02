@@ -49,7 +49,28 @@ export const createNewProduct = async (data: CreateProductData) => {
 			product,
 		}
 	} catch (error) {
-		console.log(error)
+		return {
+			ok: false,
+			error,
+		}
+	}
+}
+
+export const handleProductStatus = async (id: string, status: boolean) => {
+	try {
+		await prisma.product.update({
+			where: {
+				id,
+			},
+			data: {
+				status,
+			},
+		})
+
+		return {
+			ok: true,
+		}
+	} catch (error) {
 		return {
 			ok: false,
 			error,

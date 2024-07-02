@@ -27,8 +27,8 @@ export default async function ProductsPage(): Promise<React.ReactElement> {
 				<div className="flex items-center">
 					<TabsList>
 						<TabsTrigger value="all">Todos</TabsTrigger>
-						<TabsTrigger value="active">Activos</TabsTrigger>
-						<TabsTrigger value="inactive">Inactivos</TabsTrigger>
+						{/* <TabsTrigger value="active">Activos</TabsTrigger>
+						<TabsTrigger value="inactive">Inactivos</TabsTrigger> */}
 					</TabsList>
 					<div className="ml-auto flex items-center gap-2">
 						{canAddProduct && <AddProductButton />}
@@ -45,7 +45,7 @@ export default async function ProductsPage(): Promise<React.ReactElement> {
 						</CardContent>
 					</Card>
 				</TabsContent>
-				<TabsContent value="active">
+				{/* <TabsContent value="active">
 					<Card x-chunk="dashboard-06-chunk-0">
 						<CardHeader>
 							<CardTitle>Productos</CardTitle>
@@ -66,7 +66,7 @@ export default async function ProductsPage(): Promise<React.ReactElement> {
 							<Products status={false} isSeller={!canAddProduct} />
 						</CardContent>
 					</Card>
-				</TabsContent>
+				</TabsContent> */}
 			</Tabs>
 		</main>
 	)
