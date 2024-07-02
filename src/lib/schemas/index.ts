@@ -1,4 +1,5 @@
-import { loginSchema } from "./login-schema"
+import { createUserSchema } from "./create-user"
 import { createProduct } from "./create-product"
+import { loginSchema } from "./login-schema"
 
-export { loginSchema, createProduct }
+export { loginSchema, createProduct, createUserSchema }

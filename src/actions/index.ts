@@ -1,7 +1,14 @@
-import { getSaleById, getSales } from "./bazar/sales"
-import { authenticate, login } from "./auth/login"
-import { getProducts } from "./bazar/products"
-import { registerUser } from "./auth/register"
-import { logout } from "./auth/logout"
-
-export { authenticate, login, logout, registerUser, getSaleById, getSales, getProducts }
+export {
+	createNewProduct,
+	deleteProduct,
+	getProductById,
+	getProducts,
+	getProductsBySKU,
+	handleProductStatus,
+	updateProduct,
+} from "./bazar/products"
+export { createUser, deleteUser, getUserById, getUsers, updateUser } from "./bazar/users"
+export { getSaleById, getSales } from "./bazar/sales"
+export { authenticate, login } from "./auth/login"
+export { registerUser } from "./auth/register"
+export { logout } from "./auth/logout"

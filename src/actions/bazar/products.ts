@@ -77,3 +77,87 @@ export const handleProductStatus = async (id: string, status: boolean) => {
 		}
 	}
 }
+
+export const getProductById = async (id: string) => {
+	try {
+		const product = await prisma.product.findUnique({
+			where: {
+				id,
+			},
+		})
+
+		if (!product) {
+			throw new Error("No se encontró el producto")
+		}
+
+		return {
+			ok: true,
+			product,
+		}
+	} catch (error) {
+		return {
+			ok: false,
+			error,
+		}
+	}
+}
+
+export const updateProduct = async (id: string, data: CreateProductData) => {
+	try {
+		const product = await prisma.product.update({
+			where: {
+				id,
+			},
+			data,
+		})
+
+		return {
+			ok: true,
+			product,
+		}
+	} catch (error) {
+		return {
+			ok: false,
+			error,
+		}
+	}
+}
+
+export const deleteProduct = async (id: string) => {
+	try {
+		await prisma.product.delete({
+			where: {
+				id,
+			},
+		})
+
+		return {
+			ok: true,
+		}
+	} catch (error) {
+		return {
+			ok: false,
+			error,
+		}
+	}
+}
+
+export const getProductsBySKU = async (SKU: string) => {
+	try {
+		const products = await prisma.product.findMany({
+			where: {
+				SKU,
+			},
+		})
+
+		return {
+			ok: true,
+			products,
+		}
+	} catch (error) {
+		return {
+			ok: false,
+			error,
+		}
+	}
+}
