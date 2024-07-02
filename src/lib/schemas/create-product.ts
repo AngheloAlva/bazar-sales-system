@@ -6,7 +6,5 @@ export const createProduct = z.object({
 	SKU: z.string().min(3, "El SKU debe tener al menos 3 caracteres"),
 	stock: z.string().min(1, "El stock debe ser mayor a 0"),
 	price: z.string().min(1, "El precio debe ser mayor a 0"),
-	// expirationDate: z
-	// 	.date()
-	// 	.min(new Date(), "La fecha de expiración debe ser mayor a la fecha actual")
+	expirationDate: z.date().optional(),
 })

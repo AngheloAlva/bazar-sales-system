@@ -1,7 +1,6 @@
-import prisma from "@/lib/prisma"
-import { z } from "zod"
+"use server"
 
-import type { createProduct } from "@/lib/schemas"
+import prisma from "@/lib/prisma"
 
 export const getProducts = async (status?: boolean) => {
 	try {
@@ -35,7 +34,7 @@ interface CreateProductData {
 	SKU: string
 	stock: number
 	price: number
-	expirationDate: Date
+	expirationDate?: Date
 	image?: string
 }
 
@@ -50,6 +49,7 @@ export const createNewProduct = async (data: CreateProductData) => {
 			product,
 		}
 	} catch (error) {
+		console.log(error)
 		return {
 			ok: false,
 			error,

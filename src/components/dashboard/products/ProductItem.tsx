@@ -30,7 +30,7 @@ export default function ProductItem({
 		<TableRow>
 			<TableCell className="hidden sm:table-cell">
 				<Image
-					src={`/imgs/products${image}`}
+					src={image ? image : "/imgs/placeholder.png"}
 					alt={name}
 					height="64"
 					width="64"

@@ -86,7 +86,7 @@ model Product {
   stock           Int
   price           Float
   image           String?
-  expirationDate  DateTime
+  expirationDate  DateTime?
   status          Boolean   @default(true)
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
