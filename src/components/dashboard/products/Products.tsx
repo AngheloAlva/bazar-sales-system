@@ -5,7 +5,10 @@ import ProductItem from "./ProductItem"
 
 import type { Product } from "@prisma/client"
 
-export default async function Product({ status }: ProductProps): Promise<React.ReactElement> {
+export default async function Product({
+	status,
+	isSeller,
+}: ProductProps): Promise<React.ReactElement> {
 	const { products } = await getProducts(status)
 
 	return (
@@ -28,7 +31,9 @@ export default async function Product({ status }: ProductProps): Promise<React.R
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{products?.map((product) => <ProductItem key={product.id} {...product} />)}
+				{products?.map((product) => (
+					<ProductItem key={product.id} isSeller={isSeller} {...product} />
+				))}
 			</TableBody>
 		</Table>
 	)
@@ -36,4 +41,5 @@ export default async function Product({ status }: ProductProps): Promise<React.R
 
 interface ProductProps {
 	status?: boolean
+	isSeller: boolean
 }

@@ -41,7 +41,7 @@ export default async function ProductsPage(): Promise<React.ReactElement> {
 							<CardDescription>Administra los productos de Los Monitos de la Nona</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<Products />
+							<Products isSeller={!canAddProduct} />
 						</CardContent>
 					</Card>
 				</TabsContent>
@@ -52,7 +52,7 @@ export default async function ProductsPage(): Promise<React.ReactElement> {
 							<CardDescription>Administra los productos de Los Monitos de la Nona</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<Products status={true} />
+							<Products status={true} isSeller={!canAddProduct} />
 						</CardContent>
 					</Card>
 				</TabsContent>
@@ -63,7 +63,7 @@ export default async function ProductsPage(): Promise<React.ReactElement> {
 							<CardDescription>Administra los productos de Los Monitos de la Nona</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<Products status={false} />
+							<Products status={false} isSeller={!canAddProduct} />
 						</CardContent>
 					</Card>
 				</TabsContent>

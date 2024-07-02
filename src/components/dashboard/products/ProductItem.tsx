@@ -1,3 +1,5 @@
+import { es } from "date-fns/locale"
+import { format } from "date-fns"
 import Image from "next/image"
 
 import { MoreHorizontal } from "lucide-react"
@@ -21,6 +23,7 @@ export default function ProductItem({
 	stock,
 	image,
 	status,
+	isSeller,
 	updatedAt,
 	createdAt,
 	description,
@@ -45,29 +48,33 @@ export default function ProductItem({
 			<TableCell>${price.toLocaleString("es-Cl")}</TableCell>
 			<TableCell className="hidden md:table-cell">{stock}</TableCell>
 			<TableCell className="hidden md:table-cell">
-				{expirationDate ? expirationDate.toString() : "Sin fecha de vencimiento"}
+				{expirationDate
+					? format(new Date(expirationDate), "PPP", { locale: es })
+					: "Sin fecha de vencimiento"}
 			</TableCell>
-			<TableCell className="hidden lg:table-cell">{description}</TableCell>
-			<TableCell>
-				<DropdownMenu>
-					<DropdownMenuTrigger asChild>
-						<Button aria-haspopup="true" size="icon" variant="ghost">
-							<MoreHorizontal className="h-4 w-4" />
-							<span className="sr-only">Toggle menu</span>
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="end">
-						<DropdownMenuLabel>Acciones</DropdownMenuLabel>
-						<DropdownMenuItem>Editar</DropdownMenuItem>
-						<DropdownMenuItem>Eliminar</DropdownMenuItem>
-						{status ? (
-							<DropdownMenuItem>Desactivar</DropdownMenuItem>
-						) : (
-							<DropdownMenuItem>Activar</DropdownMenuItem>
-						)}
-					</DropdownMenuContent>
-				</DropdownMenu>
-			</TableCell>
+			<TableCell className="hidden max-w-72 truncate lg:table-cell">{description}</TableCell>
+			{!isSeller && (
+				<TableCell>
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button aria-haspopup="true" size="icon" variant="ghost">
+								<MoreHorizontal className="h-4 w-4" />
+								<span className="sr-only">Toggle menu</span>
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end">
+							<DropdownMenuLabel>Acciones</DropdownMenuLabel>
+							<DropdownMenuItem>Editar</DropdownMenuItem>
+							<DropdownMenuItem>Eliminar</DropdownMenuItem>
+							{status ? (
+								<DropdownMenuItem>Desactivar</DropdownMenuItem>
+							) : (
+								<DropdownMenuItem>Activar</DropdownMenuItem>
+							)}
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</TableCell>
+			)}
 		</TableRow>
 	)
 }
@@ -79,9 +86,10 @@ interface ProductItemProps {
 	SKU: string
 	stock: number
 	price: number
-	image: string | null
-	expirationDate: Date
+	image?: string | null
+	expirationDate?: Date | null
 	status: boolean
 	createdAt: Date
 	updatedAt: Date
+	isSeller: boolean
 }
